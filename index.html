@@ -1,0 +1,1683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resume Upload Portal</title>
+    <!-- Animate.css, FontAwesome, Ionicons, etc. -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+
+    <style>
+    :root {
+        --primary: #6c5ce7;
+        --primary-light: #8A82FF;
+        --secondary: #00cec9;
+        --accent: #FFC107;
+        --success: #4CAF50;
+        --warning: #FF9800;
+        --error: #F44336;
+        --dark: #000;
+        --light: #F8F9FF;
+        --border-radius: 16px;
+        --box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1.1);
+        --glass-bg: rgba(255, 255, 255, 0.92);
+        --glass-border: rgba(255, 255, 255, 0.4);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        Roboto, sans-serif;
+        background: linear-gradient(135deg, #f1f1f3 0%, #E4E8F0 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        color: var(--dark);
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+
+    /* Floating background circles */
+    .floating-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+    }
+    .floating-circle {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(60px);
+        opacity: 0.15;
+        animation: float 15s infinite ease-in-out;
+    }
+    .circle-1 {
+        width: 300px;
+        height: 300px;
+        background: var(--primary);
+        top: 10%;
+        left: 5%;
+        animation-delay: 0s;
+    }
+    .circle-2 {
+        width: 400px;
+        height: 400px;
+        background: var(--accent);
+        bottom: 5%;
+        right: 10%;
+        animation-delay: 2s;
+    }
+    .circle-3 {
+        width: 250px;
+        height: 250px;
+        background: var(--success);
+        top: 50%;
+        left: 30%;
+        animation-delay: 4s;
+    }
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0) translateX(0);
+        }
+        50% {
+            transform: translateY(-20px) translateX(20px);
+        }
+    }
+
+    /* Main container */
+    .container {
+        background: #fff;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        width: 100%;
+        max-width: 600px;
+        overflow: hidden;
+        position: relative;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: var(--transition);
+        z-index: 1;
+    }
+    .container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Header with rotating radial gradient */
+    .header {
+        background: linear-gradient(135deg, var(--primary) 20%, var(--secondary) 100%);
+        padding: 40px;
+        text-align: center;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+    .header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+        animation: rotate 20s linear infinite;
+    }
+    @keyframes rotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    .header-content {
+        position: relative;
+        z-index: 2;
+    }
+    .header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .header p {
+        font-size: 1rem;
+        opacity: 0.9;
+        max-width: 80%;
+        margin: 0 auto;
+    }
+
+    /* Progress bar steps (just one step here, placeholder) */
+    .progress-steps {
+        display: flex;
+        justify-content: center;
+        padding: 20px 0;
+        position: relative;
+    }
+    .step {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: white;
+        border: 3px solid var(--primary-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: var(--primary-light);
+        position: relative;
+        z-index: 2;
+        transition: var(--transition);
+    }
+    .step.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+        transform: scale(1.1);
+    }
+    .step.completed {
+        background: var(--success);
+        border-color: var(--success);
+        color: white;
+    }
+    .step-line {
+        position: absolute;
+        top: 50%;
+        left: 50px;
+        right: 50px;
+        height: 4px;
+        background: var(--primary-light);
+        transform: translateY(-50%);
+        z-index: 1;
+    }
+    .step-line-progress {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 0%;
+        background: var(--success);
+        transition: var(--transition);
+    }
+
+    /* Form area */
+    .form-container {
+        padding: 40px;
+    }
+    .form-group {
+        margin-bottom: 30px;
+        position: relative;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: var(--dark);
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+    }
+    .form-group label span {
+        color: var(--accent);
+    }
+    .input-field {
+        width: 100%;
+        padding: 16px 20px;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: var(--transition);
+        background: #f8f9fa;
+        color: var(--dark);
+        font-family: 'Poppins', sans-serif;
+    }
+    .input-field:focus {
+        outline: none;
+        border-color: var(--primary);
+        background: white;
+        box-shadow: 0 0 0 4px rgba(157, 78, 221, 0.1);
+    }
+    .input-field:hover {
+        border-color: #ced4da;
+    }
+
+    /* File‐upload box */
+    .file-upload-container {
+        position: relative;
+        margin-bottom: 30px;
+    }
+    .file-upload-container label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: 600;
+        color:#6c757d;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+    }
+    .file-upload-container label span {
+        color: var(--accent);
+    }
+    .file-upload-subtext {
+        font-size: 14px;
+        color: #fff;
+    }
+    .file-upload {
+        position: relative;
+        border: 3px dashed rgba(108, 99, 255, 0.4);
+        border-radius: var(--border-radius);
+        padding: 40px 20px;
+        text-align: center;
+        transition: var(--transition);
+        background: #8A82FF;
+        cursor: pointer;
+        overflow: hidden;
+    }
+    .file-upload.dragover {
+        border-color: var(--primary);
+        background: rgba(108, 99, 255, 0.1);
+        animation: pulse 1.5s infinite;
+        transform: scale(1.02);
+    }
+    .file-upload.dragover .file-upload-icon {
+        transform: translateY(-5px) scale(1.1);
+        color: var(--primary);
+    }
+    .file-upload.dragover .file-upload-text {
+        color: var(--primary);
+    }
+    .file-upload.dragover .file-upload-subtext {
+        color: var(--primary);
+    }
+    .file-upload-input {
+        display: none;
+    }
+
+    /* File preview box */
+    .file-preview {
+        display: none;
+        background: rgba(157, 78, 221, 0.05);
+        border: 2px solid var(--primary);
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 16px;
+        text-align: left;
+    }
+    .file-preview.show {
+        display: block;
+        animation: fadeInUp 0.4s ease-out;
+    }
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .file-info {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .file-details {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+        min-width: 0;
+    }
+    .file-icon {
+        font-size: 1.8rem;
+        color: var(--primary);
+        flex-shrink: 0;
+    }
+    .file-name {
+        font-weight: 600;
+        color: var(--dark);
+        font-size: 0.95rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .file-size {
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-top: 4px;
+    }
+    .file-actions {
+        display: flex;
+        gap: 8px;
+    }
+    .file-action-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.1rem;
+        padding: 6px;
+        border-radius: 8px;
+        transition: var(--transition);
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .view-file {
+        color: var(--primary);
+        background: rgba(157, 78, 221, 0.1);
+    }
+    .view-file:hover {
+        background: rgba(157, 78, 221, 0.2);
+        transform: scale(1.1);
+    }
+    .remove-file {
+        color: var(--error);
+        background: rgba(255, 90, 95, 0.1);
+    }
+    .remove-file:hover {
+        background: rgba(255, 90, 95, 0.2);
+        transform: scale(1.1);
+    }
+
+    /* Upload progress bar */
+    .upload-progress {
+        display: none;
+        margin-top: 20px;
+        background: rgba(157, 78, 221, 0.1);
+        border-radius: 12px;
+        padding: 15px;
+        text-align: center;
+    }
+    .upload-progress.show {
+        display: block;
+        animation: fadeInUp 0.4s ease-out;
+    }
+    .progress-bar {
+        height: 8px;
+        background: #e9ecef;
+        border-radius: 4px;
+        margin: 10px 0;
+        overflow: hidden;
+    }
+    .progress-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--primary), var(--accent));
+        border-radius: 4px;
+        transition: width 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    .progress-fill::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.5),
+          transparent
+        );
+        animation: shimmer 1.5s infinite;
+    }
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+    .progress-text {
+        font-size: 0.9rem;
+        color: var(--dark);
+        display: flex;
+        justify-content: space-between;
+        margin-top: 5px;
+    }
+    .progress-percentage {
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    /* Button group (Submit + Show Uploads) */
+    .button-group {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+    .submit-btn {
+        flex: 1;
+        background: linear-gradient(135deg, var(--primary) 20%, var(--secondary) 100%);
+        color: white;
+        border: none;
+        padding: 16px 24px;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: var(--transition);
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(157, 78, 221, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    .submit-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        transition: 0.6s;
+    }
+    .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(157, 78, 221, 0.4);
+    }
+    .submit-btn:hover::before {
+        left: 100%;
+    }
+    .submit-btn:active {
+        transform: translateY(-1px);
+    }
+    .submit-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none !important;
+        background: #adb5bd;
+    }
+    .submit-icon {
+        font-size: 1.2rem;
+        transition: var(--transition);
+    }
+    .submit-btn:hover .submit-icon {
+        transform: translateX(5px);
+    }
+
+    .show-uploads-btn {
+        background: linear-gradient(-135deg, var(--primary) 20%, var(--secondary) 100%);
+        color: white;
+        border: none;
+        padding: 16px 24px;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: var(--transition);
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(255, 182, 0, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    .show-uploads-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        transition: 0.6s;
+    }
+    .show-uploads-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(255, 182, 0, 0.4);
+    }
+    .show-uploads-btn:hover::before {
+        left: 100%;
+    }
+    .show-uploads-btn:active {
+        transform: translateY(-1px);
+    }
+    .show-uploads-icon {
+        font-size: 1.2rem;
+        transition: var(--transition);
+    }
+    .show-uploads-btn:hover .show-uploads-icon {
+        transform: translateX(5px);
+    }
+
+    /* Success message (after actual upload to server) */
+    .success-message {
+        display: none;
+        background: linear-gradient(135deg, var(--success) 0%, #03A678 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 12px;
+        text-align: center;
+        margin-top: 25px;
+        font-weight: 600;
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(6, 214, 160, 0.7); }
+        70% { box-shadow: 0 0 0 15px rgba(6, 214, 160, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(6, 214, 160, 0); }
+    }
+    .success-message.show {
+        display: block;
+        animation: fadeInUp 0.6s ease-out;
+    }
+    .success-icon {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        display: inline-block;
+        animation: bounceIn 0.8s;
+    }
+    @keyframes bounceIn {
+        0% { transform: scale(0.3); opacity: 0; }
+        50% { transform: scale(1.1); }
+        70% { transform: scale(0.9); }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Error message (validation, etc.) */
+    .error-message {
+        background: #fee2e2;
+        color: var(--error);
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-top: 8px;
+        font-size: 0.9rem;
+        border-left: 4px solid var(--error);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .error-icon {
+        font-size: 1.2rem;
+    }
+
+    /* Modals */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(5px);
+    }
+    .modal-overlay.show {
+        display: flex;
+        animation: fadeIn 0.3s ease-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    .modal-content {
+        background: white;
+        border-radius: 16px;
+        width: 90%;
+        max-width: 800px;
+        max-height: 100vh;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        transform: translateY(20px);
+        transition: transform 0.3s ease-out;
+    }
+    .modal-overlay.show .modal-content {
+        transform: translateY(0);
+    }
+    .modal-header {
+        padding: 20px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .modal-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+    .modal-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 5px;
+        transition: var(--transition);
+    }
+    .modal-close:hover {
+        transform: scale(1.2);
+    }
+    .modal-body {
+        padding: 20px;
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+    .pdf-preview {
+        width: 100%;
+        height: 90vh;
+        border: none;
+    }
+    .doc-preview {
+        width: 100%;
+        height: 100%;
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        overflow-y: auto;
+    }
+
+    /* Uploaded‐files list inside modal */
+    .uploads-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .upload-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 16px;
+        transition: var(--transition);
+        animation: fadeInRight 0.4s ease-out;
+    }
+    @keyframes fadeInRight {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    .upload-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    .upload-item-details {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .upload-item-icon {
+        font-size: 1.8rem;
+        color: var(--primary);
+    }
+    .upload-item-info h4 {
+        font-size: 1rem;
+        color: var(--dark);
+        margin-bottom: 4px;
+    }
+    .upload-item-info p {
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+    .upload-item-actions {
+        display: flex;
+        gap: 8px;
+    }
+    .upload-action-btn {
+        background: none;
+        border: none;
+        font-size: 1rem;
+        color: var(--primary);
+        cursor: pointer;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--transition);
+    }
+    .upload-action-btn:hover {
+        background: rgba(157, 78, 221, 0.1);
+        transform: scale(1.1);
+    }
+    .upload-action-delete {
+        color: var(--error);
+    }
+    .upload-action-delete:hover {
+        background: rgba(255, 90, 95, 0.1);
+    }
+    .empty-uploads {
+        text-align: center;
+        padding: 40px 20px;
+        color: #6c757d;
+    }
+    .empty-icon {
+        font-size: 3rem;
+        margin-bottom: 16px;
+        color: #dee2e6;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            margin: 10px;
+            border-radius: 12px;
+        }
+        .header {
+            padding: 30px 20px;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+        }
+        .header p {
+            max-width: 100%;
+        }
+        .form-container {
+            padding: 30px 20px;
+        }
+        .file-upload {
+            padding: 30px 15px;
+        }
+        .file-upload-text {
+            font-size: 1rem;
+        }
+        .button-group {
+            flex-direction: column;
+        }
+        .submit-btn,
+        .show-uploads-btn {
+            width: 100%;
+        }
+    }
+
+    /* Status glow (not used here, but kept from before.html) */
+    .status {
+        text-shadow: 0 0 10px #F3E600, 0 0 20px #F3E600,
+                     0 0 40px #F3E600, 0 0 80px #F3E600;
+    }
+    .status-success {
+        color: white;
+    }
+    .status-error {
+        color: red;
+    }
+    label span {
+        color: #F3E600;
+        font-weight: 700;
+        padding: 12px;
+    }
+    a {
+        text-decoration: none;
+        border: 2px solid #F3E600;
+        border-radius: 40px;
+        background-color: transparent;
+        color: #F3E600;
+        padding: 12px;
+        transition: 1s;
+    }
+    a:hover {
+        border: 2px solid white;
+        color: white;
+    }
+    .icon {
+        font-size: 100px;
+    }
+    #icon {
+        transform: translateY(5px);
+    }
+    </style>
+</head>
+<body>
+    <!-- Floating blurred circles -->
+    <div class="floating-bg">
+        <div class="floating-circle circle-1"></div>
+        <div class="floating-circle circle-2"></div>
+        <div class="floating-circle circle-3"></div>
+    </div>
+
+    <div class="container animate__animated animate__fadeInUp">
+        <div class="header">
+            <div class="header-content">
+                <h1>Resume Upload Portal</h1>
+                <p>
+                    Upload your resume and let your journey make more perfect
+                    opportunities
+                </p>
+            </div>
+        </div>
+
+        <div class="progress-steps">
+            <div class="step-line">
+                <div class="step-line-progress" id="stepProgress"></div>
+            </div>
+            <!-- (You can add .step circles here if you want to show multi-step progress) -->
+        </div>
+
+        <div class="form-container">
+            <form id="resumeForm" onsubmit="return false">
+                <div class="file-upload-container">
+                    <label>Upload Your Resume Here
+                        <span>*</span>
+                    </label>
+                    <div class="file-upload" id="fileUpload">
+                        <!-- Clicking the entire box triggers the hidden file input -->
+                        <label for="resumeFile">
+                            <input
+                                type="file"
+                                id="resumeFile"
+                                name="resumeFile"
+                                class="file-upload-input"
+                                accept=".pdf,.doc,.docx"
+                            />
+                            <span class="status1">
+                                <br /><br />
+                                <ion-icon
+                                    class="icon"
+                                    id="open"
+                                    name="folder-open"
+                                ></ion-icon>
+                            </span>
+                        </label>
+                        <div class="file-upload-subtext">
+                            Click to browse (PDF, DOC, DOCX – Max 5MB)
+                        </div>
+                    </div>
+                    <div class="file-preview" id="filePreview">
+                        <div class="file-info">
+                            <div class="file-details">
+                                <div class="file-icon">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div>
+                                    <div class="file-name" id="fileName"></div>
+                                    <div class="file-size" id="fileSize"></div>
+                                </div>
+                            </div>
+                            <div class="file-actions">
+                                <button
+                                    type="button"
+                                    class="file-action-btn view-file"
+                                    id="viewFile"
+                                    title="View file"
+                                >
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button
+                                    type="button"
+                                    class="file-action-btn remove-file"
+                                    id="removeFile"
+                                    title="Remove file"
+                                >
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="upload-progress" id="uploadProgress">
+                        <div class="progress-text">
+                            <span>Uploading your resume...</span>
+                            <span
+                                class="progress-percentage"
+                                id="progressPercentage"
+                                >0%</span
+                            >
+                        </div>
+                        <div class="progress-bar">
+                            <div
+                                class="progress-fill"
+                                id="progressFill"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button
+                        type="button"
+                        class="submit-btn"
+                        id="submitBtn"
+                        onclick="uploadResume()"
+                    >
+                        <span>Let’s go</span>
+                        <span class="submit-icon">
+                            <i class="fas fa-rocket"></i>
+                        </span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="show-uploads-btn"
+                        id="showUploadsBtn"
+                        onclick="showUploadsModal()"
+                    >
+                        <span>Show Uploads</span>
+                        <span class="show-uploads-icon">
+                            <i class="fas fa-list"></i>
+                        </span>
+                    </button>
+                </div>
+
+                <div class="success-message" id="successMessage">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Success! Your resume has been uploaded</h3>
+                    <p>Our journey makes your life professional...</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- File Preview Modal -->
+    <div class="modal-overlay" id="fileModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Resume Preview</div>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- PDF or “DOC” preview goes here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Uploaded Files Modal -->
+    <div class="modal-overlay" id="uploadsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Your Uploaded Files</div>
+                <button class="modal-close" id="uploadsModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Bucket List Header Buttons -->
+                <div class="button-group" style="margin-bottom: 1rem;">
+                    <button
+                        id="refreshBtn"
+                        class="submit-btn"
+                        onclick="listS3Files()"
+                    >
+                        Refresh&nbsp;<ion-icon name="refresh-circle-outline"></ion-icon>
+                    </button>
+                    <button
+                        id="deleteBtn"
+                        class="submit-btn"
+                        style="background: linear-gradient(135deg, #ff002f, #b006a4);"
+                        disabled
+                        onclick="deleteAllSelected()"
+                    >
+                        Delete Selected&nbsp;<ion-icon name="trash-outline"></ion-icon>
+                    </button>
+                    <button
+                        id="selectAllBtn"
+                        class="submit-btn"
+                        style="background: var(--primary-light);"
+                        onclick="toggleSelectAll()"
+                    >
+                        ALL&nbsp;<ion-icon name="checkmark-done-outline"></ion-icon>
+                    </button>
+                </div>
+
+                <!-- Files List -->
+                <div class="uploads-list" id="uploadsList">
+                    <div class="empty-uploads">
+                        <i class="fas fa-folder-open empty-icon"></i>
+                        <p>No files uploaded yet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    /***********************************************
+     * 1) GLOBALS & ELEMENT REFERENCES
+     ***********************************************/
+    const API_BASE = "https://nqh0onr5r7.execute-api.us-east-1.amazonaws.com/myresume"; 
+    // ← Change this to your own API Gateway endpoint if needed.
+
+    const fileUpload = document.getElementById("fileUpload");
+    const fileInput = document.getElementById("resumeFile");
+    const filePreview = document.getElementById("filePreview");
+    const fileName = document.getElementById("fileName");
+    const fileSize = document.getElementById("fileSize");
+    const viewFileBtn = document.getElementById("viewFile");
+    const removeFileBtn = document.getElementById("removeFile");
+    const submitBtn = document.getElementById("submitBtn");
+    const showUploadsBtn = document.getElementById("showUploadsBtn");
+    const successMessage = document.getElementById("successMessage");
+    const stepProgress = document.getElementById("stepProgress");
+    const uploadProgress = document.getElementById("uploadProgress");
+    const progressFill = document.getElementById("progressFill");
+    const progressPercentage = document.getElementById("progressPercentage");
+    const fileModal = document.getElementById("fileModal");
+    const modalClose = document.getElementById("modalClose");
+    const modalBody = document.getElementById("modalBody");
+    const modalTitle = document.getElementById("modalTitle");
+    const uploadsModal = document.getElementById("uploadsModal");
+    const uploadsModalClose = document.getElementById("uploadsModalClose");
+    const uploadsList = document.getElementById("uploadsList");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const deleteBtn = document.getElementById("deleteBtn");
+    const selectAllBtn = document.getElementById("selectAllBtn");
+
+    let uploadedFiles = []; // Holds the latest list of files from the server
+    let isAllSelected = false;
+
+    /***********************************************
+     * 2) DRAG & DROP + CLICK HANDLING (unchanged)
+     ***********************************************/
+    //fileUpload.addEventListener("click", () => fileInput.click());
+    ["dragenter", "dragover", "dragleave", "drop"].forEach((evt) => {
+        fileUpload.addEventListener(evt, preventDefaults, false);
+    });
+    ["dragenter", "dragover"].forEach((evt) => {
+        fileUpload.addEventListener(evt, highlight, false);
+    });
+    ["dragleave", "drop"].forEach((evt) => {
+        fileUpload.addEventListener(evt, unhighlight, false);
+    });
+    fileUpload.addEventListener("drop", handleDrop, false);
+    fileInput.addEventListener("change", handleFileSelect);
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    function highlight() {
+        fileUpload.classList.add("dragover");
+    }
+    function unhighlight() {
+        fileUpload.classList.remove("dragover");
+    }
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        if (files.length) {
+            fileInput.files = files;
+            handleFileSelect();
+        }
+    }
+
+    /***********************************************
+     * 3) FILE SELECTION + VALIDATION + PREVIEW
+     ***********************************************/
+    function handleFileSelect() {
+        const file = fileInput.files[0];
+        if (!file){ resetFileInput();return;}
+
+        // Hide previous success message
+        successMessage.classList.remove("show");
+        // Reset progress UI
+        uploadProgress.classList.remove("show");
+        progressFill.style.width = "0%";
+        progressPercentage.textContent = "0%";
+
+        // Validate file type
+        const validTypes = [
+            "application/pdf",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        ];
+        if (!validTypes.includes(file.type)) {
+            showError("Please upload a PDF, DOC, or DOCX file.");
+            resetFileInput();
+            return;
+        }
+
+        // Validate file size (5 MB max)
+        if (file.size > 5 * 1024 * 1024) {
+            showError("File size exceeds 5MB limit.");
+            resetFileInput();
+            return;
+        }
+
+        // Display file info
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSize(file.size);
+        filePreview.classList.add("show");
+
+        // Update the “status1” span to show the filename (as before)
+        document.querySelector(".status1").innerHTML =
+            file.name + ` choosed<br><br><ion-icon id="close" class="icon" name="folder"></ion-icon>`;
+
+        // Animate preview box briefly
+        filePreview.classList.add("animate__animated", "animate__pulse");
+        setTimeout(() => {
+            filePreview.classList.remove("animate__animated", "animate__pulse");
+        }, 600);
+
+        // Advance progress step (if you had multiple steps)
+        updateProgress(1);
+
+        // Pulse the upload area
+        fileUpload.classList.add("animate__animated", "animate__pulse");
+        setTimeout(() => {
+            fileUpload.classList.remove("animate__animated", "animate__pulse");
+        }, 1000);
+    }
+
+    /***********************************************
+     * 4) VIEW FILE (IN A MODAL)
+     ***********************************************/
+    viewFileBtn.addEventListener("click", () => {
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        modalTitle.textContent = file.name;
+        modalBody.innerHTML = "";
+
+        if (file.type === "application/pdf") {
+            const objectEl = document.createElement("object");
+            objectEl.className = "pdf-preview";
+            objectEl.data = URL.createObjectURL(file);
+            objectEl.type = "application/pdf";
+            modalBody.appendChild(objectEl);
+        } else {
+            const messageEl = document.createElement("div");
+            messageEl.className = "doc-preview";
+            messageEl.innerHTML = `
+                <h3>Document Preview</h3>
+                <p>We can't display Word documents directly. Please download to view.</p>
+                <p><strong>${file.name}</strong> (${formatFileSize(file.size)})</p>
+            `;
+            modalBody.appendChild(messageEl);
+        }
+
+        fileModal.classList.add("show");
+    });
+    modalClose.addEventListener("click", () => {
+        fileModal.classList.remove("show");
+    });
+
+    /***********************************************
+     * 5) RESET / REMOVE FILE
+     ***********************************************/
+    removeFileBtn.addEventListener("click", resetFileInput);
+    function resetFileInput() {
+      fileInput.value = "";
+      //handleFileSelect();
+       document.querySelector(".status1").innerHTML =
+           `<br><br><ion-icon id="close" class="icon" name="folder-open"></ion-icon>`;
+        filePreview.classList.remove("show");
+        uploadProgress.classList.remove("show");
+        successMessage.classList.remove("show");
+        submitBtn.style.display = "flex";
+        updateProgress(0);
+
+        // Shake the upload box
+        fileUpload.classList.add("animate__animated", "animate__headShake");
+        setTimeout(() => {
+            fileUpload.classList.remove("animate__animated", "animate__headShake");
+        }, 1000);
+    }
+
+    /***********************************************
+     * 6) HELPER: FORMAT FILE SIZE
+     ***********************************************/
+    function formatFileSize(bytes) {
+        if (bytes === 0) return "0 Bytes";
+        const k = 1024;
+        const sizes = ["Bytes", "KB", "MB", "GB"];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+    }
+
+    /***********************************************
+     * 7) HELPER: SHOW ERROR BANNER
+     ***********************************************/
+    function showError(message) {
+        const errorDiv = document.createElement("div");
+        errorDiv.className = "error-message";
+        errorDiv.innerHTML = `<span class="error-icon"><i class="fas fa-exclamation-circle"></i></span> ${message}`;
+
+        fileUpload.parentNode.insertBefore(errorDiv, fileUpload.nextSibling);
+
+        setTimeout(() => {
+            errorDiv.classList.add("animate__animated", "animate__fadeOut");
+            setTimeout(() => errorDiv.remove(), 500);
+        }, 5000);
+    }
+
+    /***********************************************
+     * 8) UPDATE PROGRESS BAR (STEPS)
+     ***********************************************/
+    const steps = document.querySelectorAll(".step");
+    function updateProgress(step) {
+        if (!steps.length) return;
+        const progress = (step / (steps.length - 1)) * 100;
+        stepProgress.style.width = `${progress}%`;
+
+        steps.forEach((s, idx) => {
+            if (idx < step) {
+                s.classList.add("completed");
+                s.classList.remove("active");
+            } else if (idx === step) {
+                s.classList.add("active");
+                s.classList.remove("completed");
+            } else {
+                s.classList.remove("active", "completed");
+            }
+        });
+    }
+
+    /***********************************************
+     * 9) UPLOAD RESUME → REAL XHR WITH PROGRESS
+     ***********************************************/
+    async function uploadResume() {
+            const file = fileInput.files[0];
+
+            if (!file) {
+                showError('Please select a resume file to upload.');
+                fileUpload.classList.add('animate-shake');
+                setTimeout(() => fileUpload.classList.remove('animate-shake'), 500);
+                return;
+            }
+
+            // Show progress bar and disable submit
+            uploadProgress.classList.add('show');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span>Uploading...</span><span class="submit-icon"><i class="fas fa-spinner fa-spin"></i></span>';
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 10;
+                if (progress > 100) progress = 100;
+
+                progressFill.style.width = `${progress}%`;
+                progressPercentage.textContent = `${Math.floor(progress)}%`;
+
+                if (progress === 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        performActualUpload(file);
+                    }, 500);
+                }
+            }, 300);
+        }
+
+        async function performActualUpload(file) {
+            const reader = new FileReader();
+
+            reader.onload = async () => {
+                const base64Data = reader.result.split(',')[1];
+
+                try {
+                    const res = await fetch(`${API_BASE}/upload`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ file: base64Data, filename: file.name })
+                    });
+
+                    const data = await res.json();
+
+                    // Only now consider the upload successful
+                    const timestamp = new Date().toISOString();
+                    uploadedFiles.push({
+                        id: Date.now(),
+                        name: file.name,
+                        size: file.size,
+                        type: file.type,
+                        uploadDate: timestamp,
+                        file: file
+                    });
+
+                    showMessage(data.message || "Upload successful", "success");
+                    successMessage.classList.add('show');
+                    uploadProgress.classList.remove('show');
+                    updateProgress(2);
+                    //createConfetti();
+                    successMessage.scrollIntoView({ behavior: 'smooth' });
+
+                    fileInput.value = '';
+                } catch (err) {
+                    showMessage("Upload failed: " + err.message, "error");
+                } finally {
+                    // Restore the submit button regardless
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<span>Let\'s Go</span><span class="submit-icon"><i class="fas fa-rocket"></i></span>';
+                    setTimeout(()=>{
+                    successMessage.classList.remove('show');
+                   handleFileSelect();
+                    },6000);
+                }
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function showMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `status-${type}`;
+            messageDiv.textContent = message;
+            
+            // Insert after form container
+            document.querySelector('.form-container').appendChild(messageDiv);
+            
+            // Remove after 5 seconds
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+
+        function showUploadedFiles() {
+            // Clear the list
+            while (uploadsList.firstChild) {
+                uploadsList.removeChild(uploadsList.firstChild);
+            }
+            
+            if (uploadedFiles.length === 0) {
+                // Show empty state
+                const emptyDiv = document.createElement('div');
+                emptyDiv.className = 'empty-uploads';
+                emptyDiv.innerHTML = `
+                    <i class="fas fa-folder-open empty-icon"></i>
+                    <p>No files uploaded yet</p>
+                `;
+                uploadsList.appendChild(emptyDiv);
+            } else {
+                // Populate list with uploaded files
+                uploadedFiles.forEach((file, index) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'upload-item';
+                    fileItem.style.animationDelay = `${index * 0.1}s`;
+                    
+                    const fileIcon = file.type.includes('pdf') ? 'fa-file-pdf' : 'fa-file-word';
+                    const fileDate = new Date(file.uploadDate).toLocaleDateString(undefined, {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
+                    fileItem.innerHTML = `
+                        <div class="upload-item-details">
+                            <div class="upload-item-icon">
+                                <i class="fas ${fileIcon}"></i>
+                            </div>
+                            <div class="upload-item-info">
+                                <h4>${file.name}</h4>
+                                <p>Uploaded: ${fileDate} · ${formatFileSize(file.size)}</p>
+                            </div>
+                        </div>
+                        <div class="upload-item-actions">
+                            <button type="button" class="upload-action-btn" onclick="previewUploadedFile(${file.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button type="button" class="upload-action-btn upload-action-delete" onclick="deleteUploadedFile(${file.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    uploadsList.appendChild(fileItem);
+                });
+            }
+            
+        
+            uploadsModal.classList.add('show');
+        }
+
+        function previewUploadedFile(fileId) {
+            const file = uploadedFiles.find(f => f.id === fileId);
+            if (!file) return;
+            
+            // Close the uploads modal
+            uploadsModal.classList.remove('show');
+            
+            // Show the file preview modal
+            modalTitle.textContent = file.name;
+            modalBody.innerHTML = '';
+            
+            if (file.type === 'application/pdf') {
+                // For PDF files
+                const objectEl = document.createElement('object');
+                objectEl.className = 'pdf-preview';
+                objectEl.data = URL.createObjectURL(file.file);
+                objectEl.type = 'application/pdf';
+                modalBody.appendChild(objectEl);
+            } else {
+                // For DOC/DOCX files
+                const messageEl = document.createElement('div');
+                messageEl.className = 'doc-preview';
+                messageEl.innerHTML = `
+                    <h3>Document Preview</h3>
+                    <p>For security reasons, we can't display a preview of Word documents directly in the browser.</p>
+                    <p>File name: <strong>${file.name}</strong></p>
+                    <p>File size: <strong>${formatFileSize(file.size)}</strong></p>
+                    <p>Please download the file to view its contents.</p>
+                `;
+                modalBody.appendChild(messageEl);
+            }
+            
+            fileModal.classList.add('show');
+        }
+
+    /***********************************************
+     * 10) SHOW / HIDE UPLOADS MODAL & FETCH FILE LIST
+     ***********************************************/
+    showUploadsBtn.addEventListener("click", showUploadsModal);
+    uploadsModalClose.addEventListener("click", () => {
+        uploadsModal.classList.remove("show");
+    });
+
+    function showUploadsModal() {
+        uploadsModal.classList.add("show");
+        listS3Files();
+    }
+
+    /***********************************************
+     * 11) LIST S3 FILES (CALL GET /api/files)
+     ***********************************************/
+    /***********************************************
+ * 11) LIST S3 FILES (CALL GET /api/files)
+ ***********************************************/
+ function remove_(str) {
+  const index = str.indexOf('_');
+  if (index === -1) return str; // No underscore found
+  return str.slice(index + 1);
+}
+async function listS3Files() {
+    try {
+        // Show loading state
+        refreshBtn.innerHTML = 'Refreshing... <i class="fas fa-spinner fa-spin"></i>';
+        uploadsList.innerHTML = '<div class="empty-uploads"><i class="fas fa-spinner fa-spin empty-icon"></i><p>Loading files...</p></div>';
+
+        const res = await fetch(`${API_BASE}/files`);
+        const data = await res.json();
+
+        // Clear the list
+        uploadsList.innerHTML = '';
+
+        if (data.files && data.files.length > 0) {
+            // Populate list with files from S3
+            data.files.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'upload-item';
+                fileItem.style.animationDelay = `${index * 0.1}s`;
+                
+                const fileIcon = file.key.endsWith('.pdf') ? 'fa-file-pdf' : 
+                                (file.key.endsWith('.doc') || file.key.endsWith('.docx')) ? 'fa-file-word' : 'fa-file-alt';
+                
+                const fileDate = new Date(file.lastModified).toLocaleDateString(undefined, {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                fileItem.innerHTML = `
+                <label for="${file.key}">
+                    <div class="upload-item-details" >
+                        <div class="upload-item-icon">
+                            <i class="fas ${fileIcon}"></i>
+                        </div>
+                        <div class="upload-item-info">
+                            <h4>${remove_(file.key)}</h4>
+                            <p>Uploaded: ${fileDate} · ${formatFileSize(file.size)}</p>
+                        </div>
+                    </div>
+                    <div class="upload-item-actions">
+                        
+                    </div></label>
+                    <input type="checkbox" class="file-checkbox" id="${file.key}" value="${file.key}" onchange="updateDeleteButtonState()">
+                `;
+                
+                uploadsList.appendChild(fileItem);
+            });
+            
+            // Enable select all button since we have files
+            selectAllBtn.disabled = false;
+        } else {
+            // Show empty state
+            uploadsList.innerHTML = `
+                <div class="empty-uploads">
+                    <i class="fas fa-folder-open empty-icon"></i>
+                    <p>No files found in storage</p>
+                </div>
+            `;
+            selectAllBtn.disabled = true;
+        }
+    } catch (err) {
+        console.error('Error fetching files:', err);
+        uploadsList.innerHTML = `
+            <div class="empty-uploads">
+                <i class="fas fa-exclamation-triangle empty-icon"></i>
+                <p>Error loading files. Please try again.</p>
+            </div>
+        `;
+    } finally {
+        // Reset refresh button
+        refreshBtn.innerHTML = 'Refresh <ion-icon name="refresh-circle-outline"></ion-icon>';
+        updateDeleteButtonState();
+    }
+}
+
+/***********************************************
+ * 12) TOGGLE "SELECT ALL" CHECKBOXES
+ ***********************************************/
+function toggleSelectAll() {
+    const checkboxes = document.querySelectorAll('.file-checkbox');
+    if (!checkboxes.length) return;
+
+    isAllSelected = !isAllSelected;
+    checkboxes.forEach((cb) => (cb.checked = isAllSelected));
+    
+    if (isAllSelected) {
+        selectAllBtn.innerHTML = `Deselect All <ion-icon name="checkbox-outline"></ion-icon>`;
+    } else {
+        selectAllBtn.innerHTML = `Select All <ion-icon name="checkmark-done-outline"></ion-icon>`;
+    }
+    updateDeleteButtonState();
+}
+
+/***********************************************
+ * 13) DELETE SINGLE FILE (CLICK-TO-TRASH ICON)
+ ***********************************************/
+async function deleteSingleFile(key) {
+    
+    try {
+        const resp = await fetch(`${API_BASE}/delete`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key })
+        });
+        
+        //if (!resp.ok) throw new Error("Failed to delete file");
+        
+        // Show success message
+        const successDiv = document.createElement('div');
+        successDiv.className = 'success-message';
+        successDiv.style.margin = '10px 0';
+        successDiv.style.padding = '10px';
+        successDiv.innerHTML = `<i class="fas fa-check-circle"></i> Files deleted successfully`;
+        uploadsModal.querySelector('.modal-body').prepend(successDiv);
+        
+        // Remove after 3 seconds
+        setTimeout(() => successDiv.remove(), 3000);
+        
+        // Refresh the list
+        await listS3Files();updateDeleteButtonState();
+    } catch (err) {
+        console.error('Error deleting file:', err);
+        alert("Error deleting file");
+    }
+}
+
+/***********************************************
+ * 14) DELETE ALL SELECTED FILES
+ ***********************************************/
+ function deleteAllSelected() {
+    if (!confirm(`Are you sure you want to delete ?`)) return;
+    const checkedBoxes = Array.from(
+        document.querySelectorAll('.file-checkbox:checked')
+    ).map((cb) => cb.value);
+    
+    if (!checkedBoxes.length) return;
+
+    for(let i=0;i<checkedBoxes.length;i++)
+             deleteSingleFile(checkedBoxes[i]);
+    // updateDeleteButtonState();
+}
+
+/***********************************************
+ * 16) UPDATE DELETE BUTTON STATE
+ ***********************************************/
+function updateDeleteButtonState() {
+    const anyChecked = document.querySelectorAll('.file-checkbox:checked').length;
+    deleteBtn.disabled = anyChecked === 0;
+}
+window.addEventListener("click", (e) => {
+        if (e.target === fileModal) {
+            fileModal.classList.remove("show");
+        }
+        if (e.target === uploadsModal) {
+            uploadsModal.classList.remove("show");
+        }
+    });
+    </script>
+</body>
+</html>
