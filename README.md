@@ -68,7 +68,7 @@ Setup AWS Backend
 
     Replace the API endpoint in index.html:
 
-const API_BASE = "https://your-api-id.execute-api.region.amazonaws.com/your-stage";
+const API_BASE = "ADD_YOUR_API";
 
 ✅ To Do / Improvements
 
